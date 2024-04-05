@@ -76,14 +76,13 @@ with ui.layout_columns():
         
         "Current Temperature"
 
-@render.text
-def display_temp():
-    """Get the latest reading and return a temperature string"""
-    deque_snapshot, df, latest_dictionary_entry = reactive_calc_combined()
-    return f"{latest_dictionary_entry['temp']} C"
+        @render.text
+        def display_temp():
+            """Get the latest reading and return a temperature string"""
+            deque_snapshot, df, latest_dictionary_entry = reactive_calc_combined()
+            return f"{latest_dictionary_entry['temp']} C"
 
-    "warmer than usual"
-
+        "warmer than usual"
 
     with ui.card(full_screen=True):
         ui.card_header("Current Date and Time")
