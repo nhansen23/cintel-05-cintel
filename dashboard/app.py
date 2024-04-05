@@ -47,6 +47,8 @@ def reactive_calc_combined():
     # For Display: get the latest dictionary entry
     latest_dictionary_entry = new_dictionary_entry
 
+    temp_msg = "cooler than usual" if temp < 76.0 else "warmer than usual"
+        
     # Return a tuple with everything
     return deque_snapshot, df, latest_dictionary_entry
 
@@ -84,11 +86,18 @@ with ui.layout_columns():
             """Get the latest reading and return a temperature string"""
             deque_snapshot, df, latest_dictionary_entry = reactive_calc_combined()
             return f"{latest_dictionary_entry['temp']} C"
-
-        "warmer than usual"
-
-    #with ui.card(full_screen=True, min_height="40%"):
-    with ui.card(full_screen=True):
+            
+            # print(temp_msg)
+        
+    with ui.card(full_screen=True, min_height="40%"):
+        ui.card_header("Current Date and Time")
+        @render.text
+        def display_time():
+            """Get the latest reading and return a timestamp string"""
+            deque_snapshot, df, latest_dictionary_entry = reactive_calc_combined()
+            return f"{latest_dictionary_entry['timestamp']}"
+    
+with ui.card(full_screen=True, min_height="30%"):
         ui.card_header("Most Recent Readings")
 
         @render.data_frame
@@ -96,19 +105,9 @@ with ui.layout_columns():
             """Get the latest reading and return a dataframe with current readings"""
             deque_snapshot, df, latest_dictionary_entry = reactive_calc_combined()
             pd.set_option('display.width', None)        # Use maximum width
-            return render.DataGrid( df,width="100%")
-
-
+            return render.DataGrid( df,width="80%")
+  
 with ui.card(full_screen=True):
-    ui.card_header("Current Date and Time")
-
-    @render.text
-    def display_time():
-        """Get the latest reading and return a timestamp string"""
-        deque_snapshot, df, latest_dictionary_entry = reactive_calc_combined()
-        return f"{latest_dictionary_entry['timestamp']}"
-    
-    with ui.card():
         ui.card_header("Chart with Current Trend")
 
         @render_plotly
@@ -116,21 +115,18 @@ with ui.card(full_screen=True):
         # Fetch from the reactive calc function
             deque_snapshot, df, latest_dictionary_entry = reactive_calc_combined()
 
-         # Ensure the DataFrame is not empty before plotting
+            # Ensure the DataFrame is not empty before plotting
             if not df.empty:
                 # Convert the 'timestamp' column to datetime for better plotting
-               df["timestamp"] = pd.to_datetime(df["timestamp"])
+                df["timestamp"] = pd.to_datetime(df["timestamp"])
 
-                # Create scatter plot for readings
-                # pass in the df, the name of the x column, the name of the y column,
-                # and more
-        
+            # Create scatter plot for readings
             fig = px.scatter(df,
                 x="timestamp",
                 y="temp",
                 title="Temperature Readings with Regression Line",
                 labels={"temp": "Temperature (°C)", "timestamp": "Time"},
-                color_discrete_sequence=["blue"] )
+                color_discrete_sequence=["black"] )
             
                 # Linear regression - we need to get a list of the
                 # Independent variable x values (time) and the
