@@ -71,7 +71,7 @@ with ui.sidebar(open="open"):
 with ui.layout_columns():
     with ui.value_box(
         showcase=icon_svg("sun"),
-        theme="bg-gradient-blue-purple",
+        theme="bg-yellow",
     ):
         
         "Current Temperature"
