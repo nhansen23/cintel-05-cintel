@@ -87,10 +87,10 @@ with ui.layout_columns():
     with ui.card(full_screen=True):
         ui.card_header("Current Date and Time")
 
-@render.text
-def display_time():
-    """Get the latest reading and return a timestamp string"""
-    deque_snapshot, df, latest_dictionary_entry = reactive_calc_combined()
-    return f"{latest_dictionary_entry['timestamp']}"
+        @render.text
+        def display_time():
+            """Get the latest reading and return a timestamp string"""
+            deque_snapshot, df, latest_dictionary_entry = reactive_calc_combined()
+            return f"{latest_dictionary_entry['timestamp']}"
     
 
