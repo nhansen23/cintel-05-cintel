@@ -18,7 +18,7 @@ import pandas as pd
 from faicons import icon_svg
 
 # Update interval to simulate live data
-UPDATE_INTERVAL_SECS: int = 2
+UPDATE_INTERVAL_SECS: int = 1
 
 # Initializing a reactive value to store the data
 DEQUE_SIZE: int = 10
