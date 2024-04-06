@@ -77,7 +77,8 @@ with ui.layout_columns():
         showcase=icon_svg("sun"),
         theme="bg-yellow",
     ):
-        
+
+        #Current Temperature Card
         "Current Temperature"
 
         @render.text
@@ -85,7 +86,8 @@ with ui.layout_columns():
             """Get the latest reading and return a temperature string"""
             deque_snapshot, df, latest_dictionary_entry = reactive_calc_combined()
             return f"{latest_dictionary_entry['Temperature']} C"
-
+    
+    #Current Data and Time Card
     with ui.card(full_screen=True, min_height="40%"):
         ui.card_header("Current Date and Time")
         @render.text
@@ -93,7 +95,8 @@ with ui.layout_columns():
             """Get the latest reading and return a timestamp string"""
             deque_snapshot, df, latest_dictionary_entry = reactive_calc_combined()
             return f"{latest_dictionary_entry['Time Stamp']}"
-    
+
+# Most Recent Temperature Readings table    
 with ui.card(full_screen=True, min_height="30%"):
         ui.card_header("Most Recent Temperature Readings")
 
@@ -102,8 +105,9 @@ with ui.card(full_screen=True, min_height="30%"):
             """Get the latest reading and return a dataframe with current readings"""
             deque_snapshot, df, latest_dictionary_entry = reactive_calc_combined()
             pd.set_option('display.width', None)        # Use maximum width
-            return render.DataGrid( df,width="80%")
-  
+            return render.DataGrid( df,width="70%")
+
+# Graph showing temperature readings with regression line for trend
 with ui.card(full_screen=True):
         ui.card_header("Chart with Current Temperature Trend")
 
@@ -114,7 +118,7 @@ with ui.card(full_screen=True):
 
             # Ensure the DataFrame is not empty before plotting
             if not df.empty:
-                # Convert the 'timestamp' column to datetime for better plotting
+                # Convert Time Stamp to datetime for better plotting
                 df["Time Stamp"] = pd.to_datetime(df["Time Stamp"])
 
             # Create scatter plot for readings
@@ -124,13 +128,8 @@ with ui.card(full_screen=True):
                 title="Temperature Readings with Regression Line",
                 labels={"Temperature": "Temperature (°C)", "Time Stamp": "Time"},
                 color_discrete_sequence=["black"] )
-            
-                # Linear regression - we need to get a list of the
-                # Independent variable x values (time) and the
-                # Dependent variable y values (temp)
-                # then, it's pretty easy using scipy.stats.linregress()
 
-                # For x let's generate a sequence of integers from 0 to len(df)
+            # Generate a sequence of integers from 0 to len(df)
             sequence = range(len(df))
             x_vals = list(sequence)
             y_vals = df["Temperature"]
@@ -138,10 +137,10 @@ with ui.card(full_screen=True):
             slope, intercept, r_value, p_value, std_err = stats.linregress(x_vals, y_vals)
             df['best_fit_line'] = [slope * x + intercept for x in x_vals]
 
-            # Add the regression line to the figure
-            fig.add_scatter(x=df["Time Stamp"], y=df['best_fit_line'], mode='lines', name='Regression Line')
+            # Add the regression line to the chart
+            fig.add_scatter(x=df["Time Stamp"], y=df['best_fit_line'], mode='lines', name='Regression Line', line_dash="dot")
 
-            # Update layout as needed to customize further
+            # Update layout
             fig.update_layout(xaxis_title="Time",yaxis_title="Temperature (°C)")
 
             return fig
